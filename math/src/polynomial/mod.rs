@@ -40,6 +40,10 @@ impl<F: IsField> Polynomial<FieldElement<F>> {
         Self::new(&[])
     }
 
+    pub fn is_zero(&self) -> bool {
+        *self == Self::zero()
+    }
+
     /// Returns a polynomial that interpolates the points with x coordinates and y coordinates given by
     /// `xs` and `ys`.
     /// `xs` and `ys` must be the same length, and `xs` values should be unique. If not, panics.

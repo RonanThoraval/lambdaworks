@@ -475,6 +475,12 @@ where
         Self { value: F::zero() }
     }
 
+    /// Returns true if the current element is the additive neutral element of the field.
+    #[inline(always)]
+    pub fn is_zero(&self) -> bool {
+        *self == Self::zero()
+    }
+
     /// Returns the raw base type
     pub fn to_raw(self) -> F::BaseType {
         self.value
