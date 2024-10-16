@@ -178,56 +178,56 @@ impl<F: IsField> Polynomial<FieldElement<F>> {
     ///
     /// Output: (quotient, remainder)
     pub fn long_division_with_remainder(self, dividend: &Self) -> (Self, Self) {
-        println!(
-            "We compute the division of degree {} poly by degree {} poly",
-            self.degree(),
-            dividend.degree()
-        );
+        // println!(
+        //     "We compute the division of degree {} poly by degree {} poly",
+        //     self.degree(),
+        //     dividend.degree()
+        // );
         if dividend.degree() > self.degree() {
             (Polynomial::zero(), self)
         } else {
             let mut n = self;
             let mut q: Vec<FieldElement<F>> = vec![FieldElement::zero(); n.degree() + 1];
-            let start = Instant::now();
+            // let start = Instant::now();
             let denominator = dividend.leading_coefficient().inv().unwrap();
-            let duration = start.elapsed();
-            println!(
-                "Time to compute the inverse of leading coefficient: {}",
-                duration.as_secs()
-            );
+            // let duration = start.elapsed();
+            // println!(
+            //     "Time to compute the inverse of leading coefficient: {}",
+            //     duration.as_secs()
+            // );
             while n != Polynomial::zero() && n.degree() >= dividend.degree() {
-                println!();
-                println!("n.degree() = {}", n.degree());
-                println!("dividend.degree() = {}", dividend.degree());
-                println!();
+                // println!();
+                // println!("n.degree() = {}", n.degree());
+                // println!("dividend.degree() = {}", dividend.degree());
+                // println!();
 
-                let start = Instant::now();
+                // let start = Instant::now();
                 let new_coefficient = n.leading_coefficient() * &denominator;
-                let duration = start.elapsed();
-                println!(
-                    "Time to compute the mul of the leading coefficients: {}",
-                    duration.as_secs()
-                );
+                // let duration = start.elapsed();
+                // println!(
+                //     "Time to compute the mul of the leading coefficients: {}",
+                //     duration.as_secs()
+                // );
 
                 q[n.degree() - dividend.degree()] = new_coefficient.clone();
-                let start = Instant::now();
+                // let start = Instant::now();
                 let d = dividend.mul_with_ref(&Polynomial::new_monomial(
                     new_coefficient,
                     n.degree() - dividend.degree(),
                 ));
-                let duration = start.elapsed();
-                println!(
-                    "Time to compute the mul of the polynomials: {}",
-                    duration.as_secs()
-                );
+                // let duration = start.elapsed();
+                // println!(
+                //     "Time to compute the mul of the polynomials: {}",
+                //     duration.as_secs()
+                // );
 
-                let start = Instant::now();
+                //let start = Instant::now();
                 n = n - d;
-                let duration = start.elapsed();
-                println!(
-                    "Time to compute the sub of the polynomials: {}",
-                    duration.as_secs()
-                );
+                // let duration = start.elapsed();
+                // println!(
+                //     "Time to compute the sub of the polynomials: {}",
+                //     duration.as_secs()
+                // );
             }
             (Polynomial::new(&q), n)
         }
