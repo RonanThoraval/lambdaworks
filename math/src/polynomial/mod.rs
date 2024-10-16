@@ -275,12 +275,39 @@ impl<F: IsField> Polynomial<FieldElement<F>> {
         if self.coefficients.is_empty() || factor.coefficients.is_empty() {
             Polynomial::new(&[FieldElement::zero()])
         } else {
+            let start = Instant::now();
             for i in 0..=factor.degree() {
                 for j in 0..=self.degree() {
                     coefficients[i + j] += &factor.coefficients[i] * &self.coefficients[j];
                 }
             }
-            Polynomial::new(&coefficients)
+            let duration = start.elapsed();
+            println!(
+                "Their multiplication algorithm takes: {}s",
+                duration.as_secs()
+            );
+            let tmp = Polynomial::new(&coefficients);
+
+            let mut coefficients1 = vec![FieldElement::zero(); degree + 1];
+            let start = Instant::now();
+            for i in 0..=factor.degree() {
+                if !factor.coefficients[i].is_zero() {
+                    for j in 0..=self.degree() {
+                        if !self.coefficients[j].is_zero() {
+                            coefficients1[i + j] += &factor.coefficients[i] * &self.coefficients[j];
+                        }
+                    }
+                }
+            }
+            let duration = start.elapsed();
+            println!("My multiplication algorithm takes: {}s", duration.as_secs());
+            assert_eq!(
+                tmp,
+                Polynomial::new(&coefficients1),
+                "The polynomials are not equal"
+            );
+
+            tmp
         }
     }
 
