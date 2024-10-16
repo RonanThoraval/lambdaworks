@@ -268,7 +268,7 @@ impl<F: IsField> Polynomial<FieldElement<F>> {
         quotient
     }
 
-    pub fn mul_with_ref(&self, factor: &Self) -> Self {
+    pub fn mul_with_re(&self, factor: &Self) -> Self {
         let degree = self.degree() + factor.degree();
         let mut coefficients = vec![FieldElement::zero(); degree + 1];
 
@@ -308,6 +308,26 @@ impl<F: IsField> Polynomial<FieldElement<F>> {
             );
 
             tmp
+        }
+    }
+
+    pub fn mul_with_ref(&self, factor: &Self) -> Self {
+        let degree = self.degree() + factor.degree();
+        let mut coefficients = vec![FieldElement::zero(); degree + 1];
+
+        if self.coefficients.is_empty() || factor.coefficients.is_empty() {
+            Polynomial::new(&[FieldElement::zero()])
+        } else {
+            for i in 0..=factor.degree() {
+                if !factor.coefficients[i].is_zero() {
+                    for j in 0..=self.degree() {
+                        if !self.coefficients[j].is_zero() {
+                            coefficients[i + j] += &factor.coefficients[i] * &self.coefficients[j];
+                        }
+                    }
+                }
+            }
+            Polynomial::new(&coefficients)
         }
     }
 
